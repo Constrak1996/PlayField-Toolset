@@ -28,7 +28,9 @@ public class ObjectSpawner : EditorWindow
     }
 
     private void OnGUI()
-    {       
+    {
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+
         GUILayout.Label("Spawn your player (if there isn't already one)", EditorStyles.boldLabel);
         if (GUILayout.Button("Spawn Playable Character"))
         {
@@ -54,7 +56,7 @@ public class ObjectSpawner : EditorWindow
 
         GUILayout.Label("Enviroment Presets", EditorStyles.boldLabel);
 
-        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+        
         if (GUILayout.Button("Office Enviroment"))
         {
             SpawnEviroment("");
