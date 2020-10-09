@@ -15,6 +15,7 @@ public class ObjectSpawner : EditorWindow
     GameObject objectToSpawn;
     float objectScale;
     float spawnRadius = 5f;
+    Vector2 scrollPos;
 
     [MenuItem("PlayField/Object Spawner")]
     public static void ShowWindow()
@@ -30,24 +31,49 @@ public class ObjectSpawner : EditorWindow
         objectID = EditorGUILayout.IntField("Object ID", objectID);
         objectScale = EditorGUILayout.Slider("Object Scale", objectScale, 0.5f, 3.0f);
         spawnRadius = EditorGUILayout.FloatField("Spawn Radius", spawnRadius);
-        objectToSpawn = EditorGUILayout.ObjectField("Prefab to spawn", objectToSpawn, typeof(GameObject), false) as GameObject;
 
-        GUILayout.BeginHorizontal();
+        GUILayout.Space(20);
+        GUILayout.Label("Spawn your player", EditorStyles.boldLabel);
         if (GUILayout.Button("Spawn Player"))
         {
-            SpawnObject();
+            SpawnPlayer();
         }
 
+        GUILayout.Space(20);
+        GUILayout.Label("Design your floor grid", EditorStyles.boldLabel);
         if (GUILayout.Button("Create Floor Grid"))
         {
             SpawnGrid();
         }
 
-        if (GUILayout.Button("Enviroments"))
+        GUILayout.Space(20);
+
+        GUILayout.Label("The Enviroment Presets");
+
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+        if (GUILayout.Button("Office Enviroment"))
         {
-            
+            SpawnEviroment("");
         }
-        GUILayout.EndHorizontal();
+        if (GUILayout.Button("Office Enviroment 2"))
+        {
+
+        }
+        if (GUILayout.Button("Office Enviroment 3"))
+        {
+
+        }
+        if (GUILayout.Button("Office Enviroment 4"))
+        {
+
+        }
+        GUILayout.EndScrollView();
+
+    }
+
+    private void SpawnEviroment(string path)
+    {
+
     }
 
     private void SpawnGrid()
@@ -55,8 +81,11 @@ public class ObjectSpawner : EditorWindow
         throw new NotImplementedException();
     }
 
-    private void SpawnObject()
+    private void SpawnPlayer()
     {
+        //Player Prefab
+        objectToSpawn = Resources.Load<GameObject>("Object Spawner/PlayerMale");
+
         if (objectToSpawn == null)
         {
             Debug.LogError("Error: Please assign an object to be spawned.");
@@ -66,14 +95,8 @@ public class ObjectSpawner : EditorWindow
             Debug.LogError("Error: Please enter a base name for the object");
         }
 
-        Vector2 spawnCircle = UnityEngine.Random.insideUnitCircle * spawnRadius;
-        Vector3 spawnPos = new Vector3(spawnCircle.x, 0f, spawnCircle.y);
-
-        GameObject newObject = Instantiate(objectToSpawn, spawnPos, Quaternion.identity);
-        newObject.name = objectBaseName + "_" + objectID;
+        GameObject newObject = Instantiate(objectToSpawn, Vector3.zero, Quaternion.identity);
         newObject.transform.localScale = Vector3.one * objectScale;
-
-        objectID++;
     }
 }
 #endif
