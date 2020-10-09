@@ -32,6 +32,7 @@ public class ObjectSpawner : EditorWindow
         spawnRadius = EditorGUILayout.FloatField("Spawn Radius", spawnRadius);
         objectToSpawn = EditorGUILayout.ObjectField("Prefab to spawn", objectToSpawn, typeof(GameObject), false) as GameObject;
 
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button("Spawn Player"))
         {
             SpawnObject();
@@ -44,8 +45,9 @@ public class ObjectSpawner : EditorWindow
 
         if (GUILayout.Button("Enviroments"))
         {
-
+            
         }
+        GUILayout.EndHorizontal();
     }
 
     private void SpawnGrid()
