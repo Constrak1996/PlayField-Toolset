@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
+using JetBrains.Annotations;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -12,10 +13,13 @@ public class ObjectSpawner : EditorWindow
 {
     string objectBaseName = "";
     int objectID = 1;
-    GameObject objectToSpawn;
+    GameObject objectToSpawn, grid, gridParent;
+    static GameObject gridDestroyer;
     float objectScale;
-    float spawnRadius = 5f;
+    int gridSize;
     Vector2 scrollPos;
+
+    public int rowLength, columLength;
 
     [MenuItem("PlayField/Object Spawner")]
     public static void ShowWindow()
@@ -24,31 +28,31 @@ public class ObjectSpawner : EditorWindow
     }
 
     private void OnGUI()
-    {
-        GUILayout.Label("Spawn New Object", EditorStyles.boldLabel);
-
-        objectBaseName = EditorGUILayout.TextField("Base Name", objectBaseName);
-        objectID = EditorGUILayout.IntField("Object ID", objectID);
-        objectScale = EditorGUILayout.Slider("Object Scale", objectScale, 0.5f, 3.0f);
-        spawnRadius = EditorGUILayout.FloatField("Spawn Radius", spawnRadius);
-
-        GUILayout.Space(20);
-        GUILayout.Label("Spawn your player", EditorStyles.boldLabel);
-        if (GUILayout.Button("Spawn Player"))
+    {       
+        GUILayout.Label("Spawn your player (if there isn't already one)", EditorStyles.boldLabel);
+        if (GUILayout.Button("Spawn Playable Character"))
         {
             SpawnPlayer();
         }
 
         GUILayout.Space(20);
         GUILayout.Label("Design your floor grid", EditorStyles.boldLabel);
+        columLength = EditorGUILayout.IntField("Colum Length", columLength);
+        rowLength = EditorGUILayout.IntField("Row Length", rowLength);
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button("Create Floor Grid"))
         {
-            SpawnGrid();
+            SpawnGrid(rowLength, columLength);
         }
+        if (GUILayout.Button("Remove Grid"))
+        {
+
+        }
+        GUILayout.EndHorizontal();
 
         GUILayout.Space(20);
 
-        GUILayout.Label("The Enviroment Presets");
+        GUILayout.Label("Enviroment Presets", EditorStyles.boldLabel);
 
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
         if (GUILayout.Button("Office Enviroment"))
@@ -76,9 +80,52 @@ public class ObjectSpawner : EditorWindow
 
     }
 
-    private void SpawnGrid()
+    private void SpawnGrid(int rowlength, int columLength)
     {
-        throw new NotImplementedException();
+        float x_Space = 1, z_Space = 1;
+
+        gridParent = Resources.Load<GameObject>("Object Spawner/GridHolder");
+        grid = Resources.Load<GameObject>("Object Spawner/FloorGrid");
+
+        List<GameObject> gridListX = new List<GameObject>();
+        List<GameObject> gridListY = new List<GameObject>();
+
+        GameObject gridParentObject = Instantiate(gridParent);
+
+        for (int i = 0; i < columLength * rowLength; i++)
+        {
+            Instantiate(grid, new Vector3(x_Space * (i % columLength), 0, z_Space * (i / columLength)), Quaternion.identity, gridParentObject.transform);
+        }
+
+
+
+        //Spawn x-axis
+        //for (int i = 0; i < size; i++)
+        //{
+        //    GameObject gridX = Instantiate(grid, gridParentObject.transform);
+        //    gridListX.Add(gridX);
+        //}
+
+        //int k = 0;
+        //foreach (GameObject grid in gridListX)
+        //{
+        //    grid.transform.Translate(new Vector3(k, 0, 0));
+        //    k++;
+        //}
+
+        ////Spawn z-axis
+        //for (int j = 0; j < size; j++)
+        //{
+        //    GameObject gridZ = Instantiate(grid, gridParentObject.transform);
+        //    gridListY.Add(gridZ);
+        //}
+
+        //int m = 0;
+        //foreach (var grid in gridListY)
+        //{
+        //    grid.transform.Translate(new Vector3(0, 0, m));
+        //    m++;
+        //}
     }
 
     private void SpawnPlayer()
