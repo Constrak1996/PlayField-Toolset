@@ -94,46 +94,17 @@ public class ObjectSpawner : EditorWindow
 
         GameObject gridParentObject = Instantiate(gridParent);
 
+        //Spawn floor grid
         for (int i = 0; i < columLength * rowLength; i++)
         {
             Instantiate(grid, new Vector3(x_Space * (i % columLength), 0, z_Space * (i / columLength)), Quaternion.identity, gridParentObject.transform);
         }
-
-
-
-        //Spawn x-axis
-        //for (int i = 0; i < size; i++)
-        //{
-        //    GameObject gridX = Instantiate(grid, gridParentObject.transform);
-        //    gridListX.Add(gridX);
-        //}
-
-        //int k = 0;
-        //foreach (GameObject grid in gridListX)
-        //{
-        //    grid.transform.Translate(new Vector3(k, 0, 0));
-        //    k++;
-        //}
-
-        ////Spawn z-axis
-        //for (int j = 0; j < size; j++)
-        //{
-        //    GameObject gridZ = Instantiate(grid, gridParentObject.transform);
-        //    gridListY.Add(gridZ);
-        //}
-
-        //int m = 0;
-        //foreach (var grid in gridListY)
-        //{
-        //    grid.transform.Translate(new Vector3(0, 0, m));
-        //    m++;
-        //}
     }
 
     private void SpawnPlayer()
     {
         //Player Prefab
-        objectToSpawn = Resources.Load<GameObject>("Object Spawner/PlayerMale");
+        objectToSpawn = Resources.Load<GameObject>("Object Spawner/First Person Player");
 
         if (objectToSpawn == null)
         {
@@ -144,8 +115,7 @@ public class ObjectSpawner : EditorWindow
             Debug.LogError("Error: Please enter a base name for the object");
         }
 
-        GameObject newObject = Instantiate(objectToSpawn, Vector3.zero, Quaternion.identity);
-        newObject.transform.localScale = Vector3.one * objectScale;
+        GameObject newObject = Instantiate(objectToSpawn, new Vector3(0,0.6f,0), Quaternion.identity);
     }
 }
 #endif
