@@ -7,12 +7,16 @@ using UnityEngine.PlayerLoop;
 
 public class CustomWindowInspector : EditorWindow
 {
-    string myString = "";
-    Vector3 myStringPos, myStringSc;
-    Quaternion myStringRot;
-    Vector4 value;
+    string aktiveGameObject = "";
+    private Vector3 myStringPos;
+    private Vector3 myStringSc;
+    private Vector3 myRotation;
     GameObject ridgetBody,collider;
+    private SerializedObject soTarget;
     
+    
+    
+
     [MenuItem("PlayField/CustomInspector")]
     public static void ShowWindow()
     {
@@ -21,35 +25,44 @@ public class CustomWindowInspector : EditorWindow
    
     void OnGUI()
     {
-        var aktiveGameObject = Selection.activeObject.name.TrimEnd();
-        Vector3 pos = Selection.activeGameObject.transform.position;
+        EditorGUIUtility.wideMode = true;
+        GameObject foundObject = GameObject.Find(aktiveGameObject);
         
-        Quaternion rot = Selection.activeGameObject.transform.rotation;
-        value = QuaternionToVector4(Selection.activeTransform.rotation);
-        Vector3 scale = Selection.activeGameObject.transform.localScale;
-        var rotation = "Rotation";
-        myString = EditorGUILayout.TextField("Name", aktiveGameObject);
-        myString.Trim();
-        if (GUILayout.Button("Name"))
+        Vector3 gameObjectScale = Selection.activeTransform.localScale;
+
+        aktiveGameObject = EditorGUILayout.TextField("Name", aktiveGameObject);
+        
+        if (foundObject)
         {
-            Debug.Log("Pressed");
+            foundObject.transform.position = EditorGUILayout.Vector3Field("Position", foundObject.transform.position);
+            foundObject.transform.localScale = EditorGUILayout.Vector3Field("Scale", foundObject.transform.localScale);
+            
         }
+        
+        //if (GUILayout.Button("Name"))
+        //{
+        //    Debug.Log("Pressed");
+        //}
 
         GUILayout.Label("Transform", EditorStyles.boldLabel);
-        myStringPos = EditorGUILayout.Vector3Field("Position", pos);
-        value = EditorGUILayout.Vector4Field("Rotation", value);
-
-        myStringSc = EditorGUILayout.Vector3Field("Scale", scale);
+        //myStringPos = EditorGUILayout.Vector3Field("Position", foundObject.transform.position);
+        
 
         GUILayout.Label("Material", EditorStyles.boldLabel);
 
         GUILayout.Label("Collider", EditorStyles.boldLabel);
         //collider.AddComponent<Collider>();
         GUILayout.Label("Ridigbody", EditorStyles.boldLabel);
+        
+        
     }
-
-    static Vector4 QuaternionToVector4(Quaternion rotation)
+    
+    static Vector3 ToVector3(Vector3 position)
     {
-        return new Vector4(rotation.x, rotation.y, rotation.z, rotation.w);
+        return new Vector3(position.x, position.y, position.x);
+    }
+    static Vector3 QuaternionToVector3(Quaternion rotation)
+    {
+        return new Vector3(rotation.x, rotation.y, rotation.z);
     }
 }
