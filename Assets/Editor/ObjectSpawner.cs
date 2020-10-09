@@ -37,8 +37,8 @@ public class ObjectSpawner : EditorWindow
 
         GUILayout.Space(20);
         GUILayout.Label("Design your floor grid", EditorStyles.boldLabel);
-        columLength = EditorGUILayout.IntField("Colum Length", columLength);
-        rowLength = EditorGUILayout.IntField("Row Length", rowLength);
+        columLength = EditorGUILayout.IntField("X Length", columLength);
+        rowLength = EditorGUILayout.IntField("Z Length", rowLength);
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Create Floor Grid"))
         {
