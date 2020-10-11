@@ -59,7 +59,7 @@ public class ObjectSpawner : EditorWindow
         
         if (GUILayout.Button("Office Enviroment"))
         {
-            SpawnEviroment("");
+            SpawnEviroment("Object Spawner/Enviroments/Enviroment 1");
         }
         if (GUILayout.Button("Office Enviroment 2"))
         {
@@ -79,7 +79,8 @@ public class ObjectSpawner : EditorWindow
 
     private void SpawnEviroment(string path)
     {
-
+        GameObject enviroment = Resources.Load<GameObject>(path);
+        Instantiate(enviroment);
     }
 
     private void SpawnGrid(int rowlength, int columLength)
@@ -104,7 +105,7 @@ public class ObjectSpawner : EditorWindow
     private void SpawnPlayer()
     {
         //Player Prefab
-        objectToSpawn = Resources.Load<GameObject>("Object Spawner/First Person Player");
+        objectToSpawn = Resources.Load<GameObject>("Object Spawner/Player");
 
         if (objectToSpawn == null)
         {
