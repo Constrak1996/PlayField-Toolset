@@ -73,6 +73,8 @@ public class ObjectSpawner : EditorWindow
         {
 
         }
+
+        //Makes menu scrollable
         GUILayout.EndScrollView();
 
     }
