@@ -4,15 +4,17 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System;
 using UnityEngine.PlayerLoop;
+using System.Runtime.CompilerServices;
 
 public class CustomWindowInspector : EditorWindow
 {
-    string aktiveGameObject = "";
+    string aktiveGameObject;
     private Vector3 myStringPos;
     private Vector3 myStringSc;
     private Vector3 myRotation;
-    GameObject ridgetBody,collider;
+    GameObject ridgetBody,collider,go;
     private SerializedObject soTarget;
+    Color color;
     
     
     
@@ -26,43 +28,48 @@ public class CustomWindowInspector : EditorWindow
     void OnGUI()
     {
         EditorGUIUtility.wideMode = true;
-        GameObject foundObject = GameObject.Find(aktiveGameObject);
         
         Vector3 gameObjectScale = Selection.activeTransform.localScale;
 
-        aktiveGameObject = EditorGUILayout.TextField("Name", aktiveGameObject);
-        
-        if (foundObject)
-        {
-            foundObject.transform.position = EditorGUILayout.Vector3Field("Position", foundObject.transform.position);
-            foundObject.transform.localScale = EditorGUILayout.Vector3Field("Scale", foundObject.transform.localScale);
-            
-        }
-        
         //if (GUILayout.Button("Name"))
         //{
         //    Debug.Log("Pressed");
         //}
-
-        GUILayout.Label("Transform", EditorStyles.boldLabel);
-        //myStringPos = EditorGUILayout.Vector3Field("Position", foundObject.transform.position);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Name"))
+        {
+            aktiveGameObject = EditorGUILayout.TextField("Name", name);
+        }
+        if (GUILayout.Button("Transform"))
+        {
+            color = EditorGUILayout.ColorField("Color", color);
+            if (GUILayout.Button("Color"))
+            {
+                Color();
+            }
+        }
         
-
-        GUILayout.Label("Material", EditorStyles.boldLabel);
-
-        GUILayout.Label("Collider", EditorStyles.boldLabel);
-        //collider.AddComponent<Collider>();
-        GUILayout.Label("Ridigbody", EditorStyles.boldLabel);
+        GUILayout.EndHorizontal();
         
-        
+        aktiveGameObject = EditorGUILayout.TextField("Name",name);
+        color = EditorGUILayout.ColorField("Color", color);
+        if (GUILayout.Button("Color"))
+        {
+            Color();
+        }
     }
     
-    static Vector3 ToVector3(Vector3 position)
+    private void Color()
     {
-        return new Vector3(position.x, position.y, position.x);
+        foreach (GameObject obj in Selection.gameObjects)
+        {
+            Renderer renderer = obj.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.sharedMaterial.color = color;
+            }
+        }
     }
-    static Vector3 QuaternionToVector3(Quaternion rotation)
-    {
-        return new Vector3(rotation.x, rotation.y, rotation.z);
-    }
+
+   
 }
