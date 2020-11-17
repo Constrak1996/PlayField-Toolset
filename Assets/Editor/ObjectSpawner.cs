@@ -56,6 +56,8 @@ public class ObjectSpawner : EditorWindow
 
         GUILayout.Label("Enviroment Presets", EditorStyles.boldLabel);
 
+        // -------------------------------------------------------------------------
+        // Enviroments
         
         if (GUILayout.Button("Office Enviroment"))
         {
@@ -73,6 +75,18 @@ public class ObjectSpawner : EditorWindow
         {
 
         }
+
+        GUILayout.Space(20);
+        GUILayout.Label("Characters", EditorStyles.boldLabel);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Character"));
+        {
+
+        }
+        GUIContent animationLabel = new GUIContent("Default");
+        EditorGUILayout.DropdownButton(animationLabel, FocusType.Passive);
+
+        GUILayout.EndHorizontal();
 
         //Makes menu scrollable
         GUILayout.EndScrollView();
