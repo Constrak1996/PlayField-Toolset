@@ -77,7 +77,7 @@ public class ObjectSpawner : EditorWindow
         }
 
         GUILayout.Space(20);
-        GUILayout.Label("Characters", EditorStyles.boldLabel);
+        GUILayout.Label("Character Animation Selector", EditorStyles.boldLabel);
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Character"));
         {
