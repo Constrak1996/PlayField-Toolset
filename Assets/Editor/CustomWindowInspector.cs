@@ -8,11 +8,11 @@ using System.Runtime.CompilerServices;
 
 public class CustomWindowInspector : EditorWindow
 {
-    string aktiveGameObject;
+    string aktiveGameObject, go;
     private Vector3 myStringPos;
     private Vector3 myStringSc;
     private Vector3 myRotation;
-    GameObject ridgetBody,collider,go;
+    GameObject ridgetBody,collider;
     private SerializedObject soTarget;
     Color color;
     
@@ -38,7 +38,7 @@ public class CustomWindowInspector : EditorWindow
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Name"))
         {
-            aktiveGameObject = EditorGUILayout.TextField("Name", name);
+            aktiveGameObject = EditorGUILayout.TextField("Name", go.Replace("(UnityEngine.GameObject)", ""));
         }
         if (GUILayout.Button("Transform"))
         {
@@ -50,8 +50,9 @@ public class CustomWindowInspector : EditorWindow
         }
         
         GUILayout.EndHorizontal();
-        
-        aktiveGameObject = EditorGUILayout.TextField("Name",name);
+        aktiveGameObject = EditorGUILayout.TextField("Name", go.Replace("(UnityEngine.GameObject)", ""));
+        go = Selection.activeObject.ToString();
+
         color = EditorGUILayout.ColorField("Color", color);
         if (GUILayout.Button("Color"))
         {
@@ -70,6 +71,10 @@ public class CustomWindowInspector : EditorWindow
             }
         }
     }
+    private void Update()
+    {
+        
+        
+    }
 
-   
 }
