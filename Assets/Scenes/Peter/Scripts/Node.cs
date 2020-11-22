@@ -9,8 +9,8 @@ public class Node
     public bool isDragged;
     public bool isSelected;
 
-    public ConnectionPoint inPoint;
-    public ConnectionPoint outPoint;
+    public EdgePoint inPoint;
+    public EdgePoint outPoint;
 
     public GUIStyle style;
     public GUIStyle defaultNodeStyle;
@@ -18,12 +18,12 @@ public class Node
 
     public Action<Node> OnRemoveNode;
 
-    public Node(Vector2 position, float width, float height, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<ConnectionPoint> OnClickInPoint, Action<ConnectionPoint> OnClickOutPoint, Action<Node> OnClickRemoveNode)
+    public Node(Vector2 position, float width, float height, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<EdgePoint> OnClickInPoint, Action<EdgePoint> OnClickOutPoint, Action<Node> OnClickRemoveNode)
     {
         rect = new Rect(position.x, position.y, width, height);
         style = nodeStyle;
-        inPoint = new ConnectionPoint(this, ConnectionPointType.In, inPointStyle, OnClickInPoint);
-        outPoint = new ConnectionPoint(this, ConnectionPointType.Out, outPointStyle, OnClickOutPoint);
+        inPoint = new EdgePoint(this, EdgePointType.In, inPointStyle, OnClickInPoint);
+        outPoint = new EdgePoint(this, EdgePointType.Out, outPointStyle, OnClickOutPoint);
         defaultNodeStyle = nodeStyle;
         selectedNodeStyle = selectedStyle;
         OnRemoveNode = OnClickRemoveNode;

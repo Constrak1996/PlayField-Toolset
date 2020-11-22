@@ -2,17 +2,17 @@
 using UnityEditor;
 using UnityEngine;
 
-public class Connection
+public class Edge
 {
-    public ConnectionPoint inPoint;
-    public ConnectionPoint outPoint;
-    public Action<Connection> OnClickRemoveConnection;
+    public EdgePoint inPoint;
+    public EdgePoint outPoint;
+    public Action<Edge> OnClickRemoveEdge;
 
-    public Connection(ConnectionPoint inPoint, ConnectionPoint outPoint, Action<Connection> OnClickRemoveConnection)
+    public Edge(EdgePoint inPoint, EdgePoint outPoint, Action<Edge> OnClickRemoveEdge)
     {
         this.inPoint = inPoint;
         this.outPoint = outPoint;
-        this.OnClickRemoveConnection = OnClickRemoveConnection;
+        this.OnClickRemoveEdge = OnClickRemoveEdge;
     }
 
     public void Draw()
@@ -29,9 +29,9 @@ public class Connection
 
         if (Handles.Button((inPoint.rect.center + outPoint.rect.center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleCap))
         {
-            if (OnClickRemoveConnection != null)
+            if (OnClickRemoveEdge != null)
             {
-                OnClickRemoveConnection(this);
+                OnClickRemoveEdge(this);
             }
         }
     }

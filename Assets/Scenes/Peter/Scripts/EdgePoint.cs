@@ -1,22 +1,22 @@
 ﻿using System;
 using UnityEngine;
 
-public enum ConnectionPointType { In, Out }
+public enum EdgePointType { In, Out }
 
-public class ConnectionPoint
+public class EdgePoint
 {
     public Rect rect;
-    public ConnectionPointType type;
+    public EdgePointType type;
     public Node node;
     public GUIStyle style;
-    public Action<ConnectionPoint> OnClickConnectionPoint;
+    public Action<EdgePoint> OnClickEdgePoint;
 
-    public ConnectionPoint(Node node, ConnectionPointType type, GUIStyle style, Action<ConnectionPoint> OnClickConnectionPoint)
+    public EdgePoint(Node node, EdgePointType type, GUIStyle style, Action<EdgePoint> OnClickConnectionPoint)
     {
         this.node = node;
         this.type = type;
         this.style = style;
-        this.OnClickConnectionPoint = OnClickConnectionPoint;
+        this.OnClickEdgePoint = OnClickConnectionPoint;
         rect = new Rect(0, 0, 10f, 20f);
     }
 
@@ -26,20 +26,20 @@ public class ConnectionPoint
 
         switch (type)
         {
-            case ConnectionPointType.In:
+            case EdgePointType.In:
                 rect.x = node.rect.x - rect.width + 8f;
                 break;
 
-            case ConnectionPointType.Out:
+            case EdgePointType.Out:
                 rect.x = node.rect.x + node.rect.width - 8f;
                 break;
         }
 
         if (GUI.Button(rect, "", style))
         {
-            if (OnClickConnectionPoint != null)
+            if (OnClickEdgePoint != null)
             {
-                OnClickConnectionPoint(this);
+                OnClickEdgePoint(this);
             }
         }
     }

@@ -5,20 +5,20 @@ using System.Collections.Generic;
 public class DialogWindow : EditorWindow
 {
     private List<Node> nodes;
-    private List<Connection> connections;
+    private List<Edge> edges;
 
     private GUIStyle nodeStyle;
     private GUIStyle selectedNodeStyle;
     private GUIStyle inPointStyle;
     private GUIStyle outPointStyle;
 
-    private ConnectionPoint selectedInPoint;
-    private ConnectionPoint selectedOutPoint;
+    private EdgePoint selectedInPoint;
+    private EdgePoint selectedOutPoint;
 
     private Vector2 offset;
     private Vector2 drag;
 
-    [MenuItem("PlayField/Node Based Editor")]
+    [MenuItem("PlayField/Dialog Window")]
     private static void OpenWindow()
     {
         DialogWindow window = GetWindow<DialogWindow>();
@@ -52,9 +52,9 @@ public class DialogWindow : EditorWindow
         DrawGrid(100, 0.4f, Color.gray);
 
         DrawNodes();
-        DrawConnections();
+        DrawEdges();
 
-        DrawConnectionLine(Event.current);
+        DrawEdgeLine(Event.current);
 
         ProcessNodeEvents(Event.current);
         ProcessEvents(Event.current);
@@ -98,13 +98,13 @@ public class DialogWindow : EditorWindow
         }
     }
 
-    private void DrawConnections()
+    private void DrawEdges()
     {
-        if (connections != null)
+        if (edges != null)
         {
-            for (int i = 0; i < connections.Count; i++)
+            for (int i = 0; i < edges.Count; i++)
             {
-                connections[i].Draw();
+                edges[i].Draw();
             }
         }
     }
@@ -118,7 +118,7 @@ public class DialogWindow : EditorWindow
             case EventType.MouseDown:
                 if (e.button == 0)
                 {
-                    ClearConnectionSelection();
+                    ClearEdgeSelection();
                 }
 
                 if (e.button == 1)
@@ -152,7 +152,7 @@ public class DialogWindow : EditorWindow
         }
     }
 
-    private void DrawConnectionLine(Event e)
+    private void DrawEdgeLine(Event e)
     {
         if (selectedInPoint != null && selectedOutPoint == null)
         {
@@ -217,7 +217,7 @@ public class DialogWindow : EditorWindow
         nodes.Add(new Node(mousePosition, 200, 50, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode));
     }
 
-    private void OnClickInPoint(ConnectionPoint inPoint)
+    private void OnClickInPoint(EdgePoint inPoint)
     {
         selectedInPoint = inPoint;
 
@@ -225,17 +225,17 @@ public class DialogWindow : EditorWindow
         {
             if (selectedOutPoint.node != selectedInPoint.node)
             {
-                CreateConnection();
-                ClearConnectionSelection();
+                CreateEdge();
+                ClearEdgeSelection();
             }
             else
             {
-                ClearConnectionSelection();
+                ClearEdgeSelection();
             }
         }
     }
 
-    private void OnClickOutPoint(ConnectionPoint outPoint)
+    private void OnClickOutPoint(EdgePoint outPoint)
     {
         selectedOutPoint = outPoint;
 
@@ -243,33 +243,33 @@ public class DialogWindow : EditorWindow
         {
             if (selectedOutPoint.node != selectedInPoint.node)
             {
-                CreateConnection();
-                ClearConnectionSelection();
+                CreateEdge();
+                ClearEdgeSelection();
             }
             else
             {
-                ClearConnectionSelection();
+                ClearEdgeSelection();
             }
         }
     }
 
     private void OnClickRemoveNode(Node node)
     {
-        if (connections != null)
+        if (edges != null)
         {
-            List<Connection> connectionsToRemove = new List<Connection>();
+            List<Edge> connectionsToRemove = new List<Edge>();
 
-            for (int i = 0; i < connections.Count; i++)
+            for (int i = 0; i < edges.Count; i++)
             {
-                if (connections[i].inPoint == node.inPoint || connections[i].outPoint == node.outPoint)
+                if (edges[i].inPoint == node.inPoint || edges[i].outPoint == node.outPoint)
                 {
-                    connectionsToRemove.Add(connections[i]);
+                    connectionsToRemove.Add(edges[i]);
                 }
             }
 
             for (int i = 0; i < connectionsToRemove.Count; i++)
             {
-                connections.Remove(connectionsToRemove[i]);
+                edges.Remove(connectionsToRemove[i]);
             }
 
             connectionsToRemove = null;
@@ -278,22 +278,22 @@ public class DialogWindow : EditorWindow
         nodes.Remove(node);
     }
 
-    private void OnClickRemoveConnection(Connection connection)
+    private void OnClickRemoveEdge(Edge edge)
     {
-        connections.Remove(connection);
+        edges.Remove(edge);
     }
 
-    private void CreateConnection()
+    private void CreateEdge()
     {
-        if (connections == null)
+        if (edges == null)
         {
-            connections = new List<Connection>();
+            edges = new List<Edge>();
         }
 
-        connections.Add(new Connection(selectedInPoint, selectedOutPoint, OnClickRemoveConnection));
+        edges.Add(new Edge(selectedInPoint, selectedOutPoint, OnClickRemoveEdge));
     }
 
-    private void ClearConnectionSelection()
+    private void ClearEdgeSelection()
     {
         selectedInPoint = null;
         selectedOutPoint = null;
