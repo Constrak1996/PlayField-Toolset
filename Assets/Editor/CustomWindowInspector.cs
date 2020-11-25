@@ -11,7 +11,7 @@ public class CustomWindowInspector : EditorWindow
     string aktiveGameObject, go;
     private Vector3 myStringPos;
     private Vector3 myStringSc;
-    private Vector3 myRotation;
+    private Vector3 myVectorRotation;
     GameObject ridgetBody,collider;
     private SerializedObject soTarget;
     Color color;
@@ -27,6 +27,10 @@ public class CustomWindowInspector : EditorWindow
    
     void OnGUI()
     {
+        myStringPos = Selection.activeTransform.localPosition;
+        myStringSc = Selection.activeTransform.localScale;
+        myVectorRotation = Selection.activeTransform.eulerAngles;
+        aktiveGameObject = EditorGUILayout.TextField("Name", go.Replace("(UnityEngine.GameObject)", ""));
         EditorGUIUtility.wideMode = true;
         
         Vector3 gameObjectScale = Selection.activeTransform.localScale;
@@ -42,6 +46,10 @@ public class CustomWindowInspector : EditorWindow
         }
         if (GUILayout.Button("Transform"))
         {
+            EditorGUILayout.Vector3Field("Position", myStringPos);
+            EditorGUILayout.Vector3Field("Rotation", myVectorRotation);
+            EditorGUILayout.Vector3Field("Scale", myStringSc);
+
             color = EditorGUILayout.ColorField("Color", color);
             if (GUILayout.Button("Color"))
             {
@@ -50,9 +58,12 @@ public class CustomWindowInspector : EditorWindow
         }
         
         GUILayout.EndHorizontal();
-        aktiveGameObject = EditorGUILayout.TextField("Name", go.Replace("(UnityEngine.GameObject)", ""));
+        
         go = Selection.activeObject.ToString();
 
+        myStringPos = EditorGUILayout.Vector3Field("Position",myStringPos);
+        myVectorRotation = EditorGUILayout.Vector3Field("Rotation", myVectorRotation);
+        myStringSc = EditorGUILayout.Vector3Field("Scale", myStringSc);
         color = EditorGUILayout.ColorField("Color", color);
         if (GUILayout.Button("Color"))
         {
@@ -73,8 +84,12 @@ public class CustomWindowInspector : EditorWindow
     }
     private void Update()
     {
-        
-        
+        foreach  (GameObject item in Selection.gameObjects)
+        {
+            myStringPos = item.GetComponent<Vector3>();
+            myStringSc = item.transform.localScale;
+            myVectorRotation = item.transform.eulerAngles;
+        }
     }
 
 }
