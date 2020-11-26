@@ -84,12 +84,7 @@ public class CustomWindowInspector : EditorWindow
     }
     private void Update()
     {
-        foreach  (GameObject item in Selection.gameObjects)
-        {
-            myStringPos = item.GetComponent<Vector3>();
-            myStringSc = item.transform.localScale;
-            myVectorRotation = item.transform.eulerAngles;
-        }
+        OnGUI();
     }
 
 }
