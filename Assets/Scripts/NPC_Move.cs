@@ -6,13 +6,16 @@ using UnityEngine.AI;
 
 public class NPC_Move : MonoBehaviour
 {
+    private int i;
+
     [SerializeField]
-    Transform destination;
+    //List of destination for NPC
+    List<Transform> destinationCheckpoints;
 
     NavMeshAgent navMeshAgent;
 
     // Start is called before the first frame update
-    void Start()
+    void Update()
     {
         navMeshAgent = this.GetComponent<NavMeshAgent>();
 
@@ -24,14 +27,28 @@ public class NPC_Move : MonoBehaviour
         {
             SetDestination();
         }
-        
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "CheckPoint")
+        {
+            //Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
+            i++;
+
+            SetDestination();
+        }
+    }
+
+    /// <summary>
+    /// Method for NPC movement
+    /// </summary>
     private void SetDestination()
     {
-        if (destination != null)
+        if (destinationCheckpoints != null)
         {
-            Vector3 targetVector = destination.transform.position;
+            Vector3 targetVector = destinationCheckpoints[i].transform.position;
             navMeshAgent.SetDestination(targetVector);
         }
     }
