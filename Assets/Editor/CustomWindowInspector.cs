@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System;
 using UnityEngine.PlayerLoop;
 using System.Runtime.CompilerServices;
+using UnityEditor.PackageManager.UI;
 
 public class CustomWindowInspector : EditorWindow
 {
@@ -14,60 +15,61 @@ public class CustomWindowInspector : EditorWindow
     private Vector3 myVectorRotation;
     GameObject ridgetBody,collider;
     private SerializedObject soTarget;
+    bool showName,ShowTransform;
+    
     Color color;
     
     
     
 
     [MenuItem("PlayField/CustomInspector")]
-    public static void ShowWindow()
+    public static void init()
     {
-        GetWindow<CustomWindowInspector>("CustomInspector");
+        EditorWindow window = GetWindow<CustomWindowInspector>("CustomInspector");
+        
     }
-   
+
+    private void OnEnable()
+    {
+
+    }
     void OnGUI()
     {
+        EditorGUI.BeginChangeCheck();
         myStringPos = Selection.activeTransform.localPosition;
         myStringSc = Selection.activeTransform.localScale;
         myVectorRotation = Selection.activeTransform.eulerAngles;
-        aktiveGameObject = EditorGUILayout.TextField("Name", go.Replace("(UnityEngine.GameObject)", ""));
         EditorGUIUtility.wideMode = true;
-        
+        go = Selection.activeObject.ToString();
         Vector3 gameObjectScale = Selection.activeTransform.localScale;
 
-        //if (GUILayout.Button("Name"))
-        //{
-        //    Debug.Log("Pressed");
-        //}
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Name"))
+        showName = EditorGUILayout.BeginFoldoutHeaderGroup(showName, "Name");
+        if (showName)
         {
             aktiveGameObject = EditorGUILayout.TextField("Name", go.Replace("(UnityEngine.GameObject)", ""));
         }
-        if (GUILayout.Button("Transform"))
+        EditorGUILayout.EndFoldoutHeaderGroup();
+        ShowTransform = EditorGUILayout.BeginFoldoutHeaderGroup(ShowTransform, "Transform");
+        if (ShowTransform)
         {
-            EditorGUILayout.Vector3Field("Position", myStringPos);
-            EditorGUILayout.Vector3Field("Rotation", myVectorRotation);
-            EditorGUILayout.Vector3Field("Scale", myStringSc);
-
+            myStringPos = EditorGUILayout.Vector3Field("Position", myStringPos);
+            myVectorRotation = EditorGUILayout.Vector3Field("Rotation", myVectorRotation);
+            myStringSc = EditorGUILayout.Vector3Field("Scale", myStringSc);
             color = EditorGUILayout.ColorField("Color", color);
             if (GUILayout.Button("Color"))
             {
                 Color();
             }
         }
+        EditorGUILayout.EndFoldoutHeaderGroup();
         
-        GUILayout.EndHorizontal();
-        
-        go = Selection.activeObject.ToString();
-
-        myStringPos = EditorGUILayout.Vector3Field("Position",myStringPos);
-        myVectorRotation = EditorGUILayout.Vector3Field("Rotation", myVectorRotation);
-        myStringSc = EditorGUILayout.Vector3Field("Scale", myStringSc);
-        color = EditorGUILayout.ColorField("Color", color);
-        if (GUILayout.Button("Color"))
+        if (EditorGUI.EndChangeCheck())
         {
-            Color();
+            soTarget.ApplyModifiedProperties();
+        }
+        if (GUILayout.Button("Add Component"))
+        {
+            Debug.Log("OH no");
         }
     }
     
@@ -84,7 +86,7 @@ public class CustomWindowInspector : EditorWindow
     }
     private void Update()
     {
-        OnGUI();
+        soTarget.Update();
     }
 
 }
