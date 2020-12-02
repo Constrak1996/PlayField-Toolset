@@ -69,6 +69,7 @@ public class CustomWindowInspector : EditorWindow
         }
         if (GUILayout.Button("Add Component"))
         {
+            
             Debug.Log("OH no");
         }
     }
