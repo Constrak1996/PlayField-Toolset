@@ -10,7 +10,7 @@ using UnityEditor.PackageManager.UI;
 public class CustomWindowInspector : EditorWindow
 {
     string aktiveGameObject, go;
-    private Vector3 myStringPos;
+    private Vector3 myStringPos, setMyStringPos;
     private Vector3 myStringSc;
     private Vector3 myVectorRotation;
     private SerializedObject soTarget;
@@ -30,16 +30,12 @@ public class CustomWindowInspector : EditorWindow
 
     private void OnEnable()
     {
-
+        
     }
     void OnGUI()
     {
-        myStringPos = Selection.activeTransform.localPosition;
-        myStringSc = Selection.activeTransform.localScale;
-        myVectorRotation = Selection.activeTransform.eulerAngles;
         EditorGUIUtility.wideMode = true;
-        go = Selection.activeObject.ToString();
-        Vector3 gameObjectScale = Selection.activeTransform.localScale;
+        
         EditorGUILayout.BeginHorizontal();
         showName = EditorGUILayout.BeginFoldoutHeaderGroup(showName, "Name");
         EditorGUILayout.EndFoldoutHeaderGroup();
@@ -48,14 +44,27 @@ public class CustomWindowInspector : EditorWindow
         EditorGUILayout.EndHorizontal();
         if (showName)
         {
+            go = Selection.activeObject.ToString();
             aktiveGameObject = EditorGUILayout.TextField("Name", go.Replace("(UnityEngine.GameObject)", ""));
+            foreach (GameObject itemName in Selection.gameObjects)
+            {
+                itemName.name = aktiveGameObject;
+            }
+            
         }
         
         if (ShowTransform)
         {
-            myStringPos = EditorGUILayout.Vector3Field("Position", myStringPos);
-            myVectorRotation = EditorGUILayout.Vector3Field("Rotation", myVectorRotation);
-            myStringSc = EditorGUILayout.Vector3Field("Scale", myStringSc);
+            myStringPos = EditorGUILayout.Vector3Field("Position", Selection.activeTransform.localPosition);
+            myVectorRotation = EditorGUILayout.Vector3Field("Rotation", Selection.activeTransform.eulerAngles);
+            myStringSc = EditorGUILayout.Vector3Field("Scale", Selection.activeTransform.localScale);
+            foreach  (GameObject item in Selection.gameObjects)
+            {
+                item.transform.position = myStringPos;
+                item.transform.localScale = myStringSc;
+                item.transform.eulerAngles = myVectorRotation;
+            }
+           
             color = EditorGUILayout.ColorField("Color", color);
             if (GUILayout.Button("Color"))
             {
@@ -73,10 +82,10 @@ public class CustomWindowInspector : EditorWindow
     {
         foreach (GameObject obj in Selection.gameObjects)
         {
-            Renderer renderer = obj.GetComponent<Renderer>();
+            Renderer renderer = obj.gameObject.GetComponent<Renderer>();
             if (renderer != null)
             {
-                renderer.sharedMaterial.color = color;
+                renderer.material.color = color;
             }
         }
     }
