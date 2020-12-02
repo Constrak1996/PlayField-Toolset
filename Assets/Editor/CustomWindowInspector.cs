@@ -13,7 +13,6 @@ public class CustomWindowInspector : EditorWindow
     private Vector3 myStringPos;
     private Vector3 myStringSc;
     private Vector3 myVectorRotation;
-    GameObject ridgetBody,collider;
     private SerializedObject soTarget;
     bool showName,ShowTransform;
     
@@ -35,21 +34,23 @@ public class CustomWindowInspector : EditorWindow
     }
     void OnGUI()
     {
-        EditorGUI.BeginChangeCheck();
         myStringPos = Selection.activeTransform.localPosition;
         myStringSc = Selection.activeTransform.localScale;
         myVectorRotation = Selection.activeTransform.eulerAngles;
         EditorGUIUtility.wideMode = true;
         go = Selection.activeObject.ToString();
         Vector3 gameObjectScale = Selection.activeTransform.localScale;
-
+        EditorGUILayout.BeginHorizontal();
         showName = EditorGUILayout.BeginFoldoutHeaderGroup(showName, "Name");
+        EditorGUILayout.EndFoldoutHeaderGroup();
+        ShowTransform = EditorGUILayout.BeginFoldoutHeaderGroup(ShowTransform, "Transform");
+        EditorGUILayout.EndFoldoutHeaderGroup();
+        EditorGUILayout.EndHorizontal();
         if (showName)
         {
             aktiveGameObject = EditorGUILayout.TextField("Name", go.Replace("(UnityEngine.GameObject)", ""));
         }
-        EditorGUILayout.EndFoldoutHeaderGroup();
-        ShowTransform = EditorGUILayout.BeginFoldoutHeaderGroup(ShowTransform, "Transform");
+        
         if (ShowTransform)
         {
             myStringPos = EditorGUILayout.Vector3Field("Position", myStringPos);
@@ -61,16 +62,10 @@ public class CustomWindowInspector : EditorWindow
                 Color();
             }
         }
-        EditorGUILayout.EndFoldoutHeaderGroup();
         
-        if (EditorGUI.EndChangeCheck())
-        {
-            soTarget.ApplyModifiedProperties();
-        }
         if (GUILayout.Button("Add Component"))
         {
-            
-            Debug.Log("OH no");
+            AddComponent();
         }
     }
     
@@ -85,9 +80,14 @@ public class CustomWindowInspector : EditorWindow
             }
         }
     }
+
+    private void AddComponent()
+    {
+        Debug.Log("OH no Not implemented yet!");
+    }
     private void Update()
     {
-        soTarget.Update();
+        
     }
 
 }
