@@ -2,10 +2,17 @@
 using UnityEditor;
 using UnityEngine;
 
+public enum NodeType {Dialog, Quest};
+
 public class Node
 {
     public Rect rect;
+    public NodeType type;
     public string title;
+    public bool toggleBool = false;
+    public string diaMessage = "Enter message here";
+    public string taskMessage = "Enter name here";
+    public string pointMessage = "Enter point here";
     public bool isDragged;
     public bool isSelected;
 
@@ -18,7 +25,7 @@ public class Node
 
     public Action<Node> OnRemoveNode;
 
-    public Node(Vector2 position, float width, float height, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<EdgePoint> OnClickInPoint, Action<EdgePoint> OnClickOutPoint, Action<Node> OnClickRemoveNode)
+    public Node(Vector2 position, float width, float height, GUIStyle nodeStyle, GUIStyle selectedStyle, GUIStyle inPointStyle, GUIStyle outPointStyle, Action<EdgePoint> OnClickInPoint, Action<EdgePoint> OnClickOutPoint, Action<Node> OnClickRemoveNode, NodeType type)
     {
         rect = new Rect(position.x, position.y, width, height);
         style = nodeStyle;
@@ -27,7 +34,9 @@ public class Node
         defaultNodeStyle = nodeStyle;
         selectedNodeStyle = selectedStyle;
         OnRemoveNode = OnClickRemoveNode;
+        this.type = type;
     }
+    
 
     public void Drag(Vector2 delta)
     {
@@ -38,7 +47,25 @@ public class Node
     {
         inPoint.Draw();
         outPoint.Draw();
-        GUI.Box(rect, title, style);
+        switch (type)
+        {
+            case NodeType.Dialog:
+                GUI.Box(rect, title, style);
+                GUI.Label(new Rect(rect.center.x - 90, (rect.center.y + 10) - 50, 60, 15), "Message");
+                GUI.Label(new Rect(rect.center.x - 20, (rect.center.y - 10) - 50, 50, 15), "Dialog");
+                diaMessage = GUI.TextField(new Rect(rect.center.x - 90, rect.center.y - 25, 175, 20), diaMessage);
+                break;
+
+            case NodeType.Quest:
+                GUI.Box(rect, title, style);
+                GUI.Label(new Rect(rect.center.x - 20, (rect.center.y - 10) - 50, 50, 15), "Quest");
+                GUI.Label(new Rect(rect.center.x - 90, (rect.center.y + 5) - 50, 100, 15), "Task Name");
+                GUI.TextField(new Rect(rect.center.x - 90, rect.center.y - 30, 175, 20), taskMessage);
+                GUI.Label(new Rect(rect.center.x - 90, (rect.center.y + 40) - 50, 100, 15), "Object To Find");
+                object textField = GUI.TextField(new Rect(rect.center.x - 90, rect.center.y + 40, 175, 20), pointMessage);
+                toggleBool = GUI.Toggle(new Rect(rect.center.x - 90, (rect.center.y + 72.5f) - 50, 60, 15), toggleBool, "Points");
+                break;
+        }
     }
 
     public bool ProcessEvents(Event e)

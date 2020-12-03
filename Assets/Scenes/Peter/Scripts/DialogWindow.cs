@@ -188,7 +188,8 @@ public class DialogWindow : EditorWindow
     private void ProcessContextMenu(Vector2 mousePosition)
     {
         GenericMenu genericMenu = new GenericMenu();
-        genericMenu.AddItem(new GUIContent("Add node"), false, () => OnClickAddNode(mousePosition));
+        genericMenu.AddItem(new GUIContent("Dialog"), false, () => OnClickAddDialog(mousePosition));
+        genericMenu.AddItem(new GUIContent("Quest"), false, () => OnClickAddQuest(mousePosition));
         genericMenu.ShowAsContext();
     }
 
@@ -207,14 +208,24 @@ public class DialogWindow : EditorWindow
         GUI.changed = true;
     }
 
-    private void OnClickAddNode(Vector2 mousePosition)
+    private void OnClickAddDialog(Vector2 mousePosition)
     {
         if (nodes == null)
         {
             nodes = new List<Node>();
         }
 
-        nodes.Add(new Node(mousePosition, 200, 50, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode));
+        nodes.Add(new Node(mousePosition, 200, 150, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, NodeType.Dialog));
+    }
+
+    private void OnClickAddQuest(Vector2 mousePosition)
+    {
+        if (nodes == null)
+        {
+            nodes = new List<Node>();
+        }
+
+        nodes.Add(new Node(mousePosition, 200, 150, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, NodeType.Quest));
     }
 
     private void OnClickInPoint(EdgePoint inPoint)
@@ -257,22 +268,22 @@ public class DialogWindow : EditorWindow
     {
         if (edges != null)
         {
-            List<Edge> connectionsToRemove = new List<Edge>();
+            List<Edge> edgesToRemove = new List<Edge>();
 
             for (int i = 0; i < edges.Count; i++)
             {
                 if (edges[i].inPoint == node.inPoint || edges[i].outPoint == node.outPoint)
                 {
-                    connectionsToRemove.Add(edges[i]);
+                    edgesToRemove.Add(edges[i]);
                 }
             }
 
-            for (int i = 0; i < connectionsToRemove.Count; i++)
+            for (int i = 0; i < edgesToRemove.Count; i++)
             {
-                edges.Remove(connectionsToRemove[i]);
+                edges.Remove(edgesToRemove[i]);
             }
 
-            connectionsToRemove = null;
+            edgesToRemove = null;
         }
 
         nodes.Remove(node);

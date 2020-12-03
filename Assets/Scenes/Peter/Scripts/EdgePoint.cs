@@ -17,7 +17,7 @@ public class EdgePoint
         this.type = type;
         this.style = style;
         this.OnClickEdgePoint = OnClickConnectionPoint;
-        rect = new Rect(0, 0, 10f, 20f);
+        rect = new Rect(0, 0, 12.5f, 27.5f);
     }
 
     public void Draw()
