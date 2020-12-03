@@ -2029,7 +2029,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7754087174718054978}
-  - component: {fileID: 1300073727383150384}
   - component: {fileID: 4124501268371124741}
   - component: {fileID: 5620674391488388738}
   m_Layer: 0
@@ -2060,25 +2059,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &1300073727383150384
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6978289823891798264}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 155102f85c01c1c489c61a57751b55f8, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!195 &4124501268371124741
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2113,7 +2093,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41dd21abdb8bd3f48bd9ec9f5bfb375e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destination: {fileID: 0}
+  destinationCheckpoints: []
 --- !u!1 &7095661692482104540
 GameObject:
   m_ObjectHideFlags: 0
