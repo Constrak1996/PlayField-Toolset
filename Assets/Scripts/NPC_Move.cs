@@ -3,30 +3,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 public class NPC_Move : MonoBehaviour
 {
     private int i;
+    public ThirdPersonCharacter character;
+    NavMeshAgent agent;
 
     [SerializeField]
-    //List of destination for NPC
     List<Transform> destinationCheckpoints;
 
-    NavMeshAgent navMeshAgent;
+
+    private void Start()
+    {
+        agent.updateRotation = false;
+    }
 
     // Start is called before the first frame update
     void Update()
     {
-        navMeshAgent = this.GetComponent<NavMeshAgent>();
+        agent = this.GetComponent<NavMeshAgent>();
 
-        if (navMeshAgent == null)
+        if (agent == null)
         {
             Debug.LogError("The nav mesh agent component is null");
         }
         else
         {
+            if (agent.remainingDistance > agent.stoppingDistance)
+            {
+                agent.SetDestination(agent.desiredVelocity);
+            }
+            else
+            {
+                agent.Move(Vector3.zero); 
+            }
+
             SetDestination();
         }
+
+        
     }
 
     void OnTriggerEnter(Collider other)
@@ -49,7 +66,8 @@ public class NPC_Move : MonoBehaviour
         if (destinationCheckpoints != null)
         {
             Vector3 targetVector = destinationCheckpoints[i].transform.position;
-            navMeshAgent.SetDestination(targetVector);
+            //agent.Move(targetVector);
+            agent.SetDestination(targetVector);
         }
     }
 }
