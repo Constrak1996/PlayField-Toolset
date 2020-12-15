@@ -6,11 +6,13 @@ using System;
 using UnityEngine.PlayerLoop;
 using System.Runtime.CompilerServices;
 using UnityEditor.PackageManager.UI;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class CustomWindowInspector : EditorWindow
 {
-    string aktiveGameObject, go;
-    private Vector3 myStringPos, setMyStringPos;
+    string aktiveGameObject,tags, go;
+    private Vector3 myStringPos;
     private Vector3 myStringSc;
     private Vector3 myVectorRotation;
     private SerializedObject soTarget;
@@ -39,32 +41,45 @@ public class CustomWindowInspector : EditorWindow
         EditorGUILayout.BeginHorizontal();
         showName = EditorGUILayout.BeginFoldoutHeaderGroup(showName, "Name");
         EditorGUILayout.EndFoldoutHeaderGroup();
+        
         ShowTransform = EditorGUILayout.BeginFoldoutHeaderGroup(ShowTransform, "Transform");
         EditorGUILayout.EndFoldoutHeaderGroup();
         EditorGUILayout.EndHorizontal();
         if (showName)
         {
-            go = Selection.activeObject.ToString();
-            aktiveGameObject = EditorGUILayout.TextField("Name", go.Replace("(UnityEngine.GameObject)", ""));
+            tags = EditorGUILayout.TagField("Tag",tags);
+            aktiveGameObject = EditorGUILayout.TextField("Name", Selection.activeObject.name.Replace("(UnityEngine.GameObject)", ""));
+            
             foreach (GameObject itemName in Selection.gameObjects)
             {
-                itemName.name = aktiveGameObject;
+                if (itemName != null)
+                {
+                    itemName.name = aktiveGameObject;
+                    itemName.tag = tags;
+                }
+                
             }
-            
+
         }
-        
+        EditorGUILayout.Space();
         if (ShowTransform)
         {
+            EditorGUILayout.LabelField("Transform");
             myStringPos = EditorGUILayout.Vector3Field("Position", Selection.activeTransform.localPosition);
             myVectorRotation = EditorGUILayout.Vector3Field("Rotation", Selection.activeTransform.eulerAngles);
             myStringSc = EditorGUILayout.Vector3Field("Scale", Selection.activeTransform.localScale);
-            foreach  (GameObject item in Selection.gameObjects)
+
+            foreach (GameObject item in Selection.gameObjects)
             {
-                item.transform.position = myStringPos;
-                item.transform.localScale = myStringSc;
-                item.transform.eulerAngles = myVectorRotation;
+                if (item != null)
+                {
+                    item.transform.position = myStringPos;
+                    item.transform.localScale = myStringSc;
+                    item.transform.eulerAngles = myVectorRotation;
+                }
+                
             }
-           
+
             color = EditorGUILayout.ColorField("Color", color);
             if (GUILayout.Button("Color"))
             {
