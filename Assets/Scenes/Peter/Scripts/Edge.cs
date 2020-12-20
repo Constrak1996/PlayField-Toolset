@@ -7,12 +7,15 @@ public class Edge
     public EdgePoint inPoint;
     public EdgePoint outPoint;
     public Action<Edge> OnClickRemoveEdge;
+    public Action<Node> RemoveConnectedNode;
+    
 
-    public Edge(EdgePoint inPoint, EdgePoint outPoint, Action<Edge> OnClickRemoveEdge)
+    public Edge(EdgePoint inPoint, EdgePoint outPoint, Action<Edge> OnClickRemoveEdge, Action<Node> RemoveConnectedNode)
     {
         this.inPoint = inPoint;
         this.outPoint = outPoint;
         this.OnClickRemoveEdge = OnClickRemoveEdge;
+        this.RemoveConnectedNode = RemoveConnectedNode;
     }
 
     public void Draw()
@@ -32,6 +35,10 @@ public class Edge
             if (OnClickRemoveEdge != null)
             {
                 OnClickRemoveEdge(this);
+                RemoveConnectedNode(inPoint.node);
+                RemoveConnectedNode(outPoint.node);
+                inPoint.attached = 0;
+                outPoint.attached = 0;
             }
         }
     }

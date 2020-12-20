@@ -9,14 +9,16 @@ public class EdgePoint
     public EdgePointType type;
     public Node node;
     public GUIStyle style;
+    public int attached = 0;
+    public bool currentlyAttached = false;
     public Action<EdgePoint> OnClickEdgePoint;
 
-    public EdgePoint(Node node, EdgePointType type, GUIStyle style, Action<EdgePoint> OnClickConnectionPoint)
+    public EdgePoint(Node node, EdgePointType type, GUIStyle style, Action<EdgePoint> OnClickEdgePoint)
     {
         this.node = node;
         this.type = type;
         this.style = style;
-        this.OnClickEdgePoint = OnClickConnectionPoint;
+        this.OnClickEdgePoint = OnClickEdgePoint;
         rect = new Rect(0, 0, 12.5f, 27.5f);
     }
 
