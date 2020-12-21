@@ -116,7 +116,7 @@ public class DialogWindow : EditorWindow
                 if (connectedNodes[j].isDialog)
                 {
                     Debug.Log("Thread " + Thread.CurrentThread.Name + ":" + connectedNodes[j].diaMessage);
-                    FindTask.loadedNodes.Add(connectedNodes[j]);
+                    TaskGiver.loadedNodes.Add(connectedNodes[j]);
                 }
                 else if (connectedNodes[j].isQuest)
                 {
