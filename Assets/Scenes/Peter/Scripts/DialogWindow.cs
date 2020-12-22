@@ -1,11 +1,17 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
+using System.Threading;
 
 public class DialogWindow : EditorWindow
 {
     private List<Node> nodes;
     private List<Edge> edges;
+    private object key = new object();
+
+    private int threadCounter = 0;
+    int timer = 0;
+    public List<Node> connectedNodes = new List<Node>();
 
     private GUIStyle nodeStyle;
     private GUIStyle selectedNodeStyle;
@@ -15,8 +21,12 @@ public class DialogWindow : EditorWindow
     private EdgePoint selectedInPoint;
     private EdgePoint selectedOutPoint;
 
+    TaskGiver taskGiver;
+
     private Vector2 offset;
     private Vector2 drag;
+
+    public bool isDone = false;
 
     [MenuItem("PlayField/Dialog Window")]
     private static void OpenWindow()
@@ -54,12 +64,73 @@ public class DialogWindow : EditorWindow
         DrawNodes();
         DrawEdges();
 
+        if (GUI.Button(new Rect(0, 0, 100, 25), "End Script"))
+        {
+            isDone = true;
+            threadCounter = 0;
+            taskGiver = FindObjectOfType<TaskGiver>();
+            if (isDone == true)
+            {
+                CreateThreads();
+                isDone = false;
+            }
+        }
+
         DrawEdgeLine(Event.current);
 
         ProcessNodeEvents(Event.current);
         ProcessEvents(Event.current);
 
         if (GUI.changed) Repaint();
+    }
+
+    private void CreateThreads()
+    {
+        Thread[] threads = new Thread[connectedNodes.Count];
+        for (int i = 0; i < connectedNodes.Count; i++)
+        {
+            threads[i] = new Thread(() => TestRunOfAllNodes());
+            threads[i].Name = i.ToString();
+
+            threads[i].Start();
+        }
+    }
+
+    private void TestRunOfAllNodes()
+    {
+        int j = 0;
+
+        lock (key)
+        {
+            timer = 0;
+
+            for (int i = 0; i < 1; i++)
+            {
+                if (connectedNodes[i].isDialog)
+                {
+                    foreach (char character in connectedNodes[i].diaMessage)
+                    {
+                        timer += 200;
+                    }
+                }
+            }
+            j = threadCounter;
+            for (int i = threadCounter + 1; j < i; j++)
+            {
+                if (connectedNodes[j].isDialog)
+                {
+                    Debug.Log("Thread " + Thread.CurrentThread.Name + ":" + connectedNodes[j].diaMessage);
+                    taskGiver.loadedNodes.Add(connectedNodes[j]);
+                }
+                else if (connectedNodes[j].isQuest)
+                {
+                    Debug.Log("Thread " + Thread.CurrentThread.Name + " is quest node. \n Task name: " + connectedNodes[j].taskMessage + "\n Point is: " + connectedNodes[j].toggleBool + "\n Points is: " + connectedNodes[j].pointMessage);
+                    taskGiver.loadedNodes.Add(connectedNodes[j]);
+                }
+            }
+            Thread.Sleep(timer);
+        }
+        threadCounter++;
     }
 
     private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
@@ -215,7 +286,7 @@ public class DialogWindow : EditorWindow
             nodes = new List<Node>();
         }
 
-        nodes.Add(new Node(mousePosition, 200, 150, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, NodeType.Dialog));
+        nodes.Add(new Node(mousePosition, 200, 150, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, NodeType.Dialog, RemoveConnectedNode));
     }
 
     private void OnClickAddQuest(Vector2 mousePosition)
@@ -225,7 +296,7 @@ public class DialogWindow : EditorWindow
             nodes = new List<Node>();
         }
 
-        nodes.Add(new Node(mousePosition, 200, 150, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, NodeType.Quest));
+        nodes.Add(new Node(mousePosition, 200, 150, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, NodeType.Quest, RemoveConnectedNode));
     }
 
     private void OnClickInPoint(EdgePoint inPoint)
@@ -234,8 +305,11 @@ public class DialogWindow : EditorWindow
 
         if (selectedOutPoint != null)
         {
-            if (selectedOutPoint.node != selectedInPoint.node)
+            if (selectedOutPoint.node != selectedInPoint.node && inPoint.attached == 0 && selectedOutPoint.attached == 0)
             {
+                inPoint.attached = 1;
+                AddConnectedNode(selectedOutPoint.node);
+                AddConnectedNode(selectedInPoint.node);
                 CreateEdge();
                 ClearEdgeSelection();
             }
@@ -252,8 +326,11 @@ public class DialogWindow : EditorWindow
 
         if (selectedInPoint != null)
         {
-            if (selectedOutPoint.node != selectedInPoint.node)
+            if (selectedOutPoint.node != selectedInPoint.node && outPoint.attached == 0 && selectedInPoint.attached == 0)
             {
+                outPoint.attached = 1;
+                AddConnectedNode(selectedOutPoint.node);
+                AddConnectedNode(selectedInPoint.node);
                 CreateEdge();
                 ClearEdgeSelection();
             }
@@ -293,6 +370,15 @@ public class DialogWindow : EditorWindow
     {
         edges.Remove(edge);
     }
+    private void RemoveConnectedNode(Node node)
+    {
+        connectedNodes.Remove(node);
+    }
+    private void AddConnectedNode(Node node)
+    {
+        connectedNodes.Add(node);
+        Debug.Log("Add connected node");
+    }
 
     private void CreateEdge()
     {
@@ -301,7 +387,7 @@ public class DialogWindow : EditorWindow
             edges = new List<Edge>();
         }
 
-        edges.Add(new Edge(selectedInPoint, selectedOutPoint, OnClickRemoveEdge));
+        edges.Add(new Edge(selectedInPoint, selectedOutPoint, OnClickRemoveEdge, RemoveConnectedNode));
     }
 
     private void ClearEdgeSelection()
