@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class TaskGiver : MonoBehaviour
 {
-    public static List<Node> loadedNodes = new List<Node>();
+    public List<Node> loadedNodes = new List<Node>();
     private List<string> nodeDialog = new List<string>();
     private List<string> nodeTaskName = new List<string>();
     private List<string> nodePoints = new List<string>();
@@ -16,6 +16,7 @@ public class TaskGiver : MonoBehaviour
     private Task task;
     public List<string> triggerName = new List<string>(); //Get name set name from dropdown task
     List<string> newTrigger = new List<string>();
+
     private void Start()
     {
         foreach (Node node in loadedNodes)

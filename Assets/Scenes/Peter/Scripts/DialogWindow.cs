@@ -9,7 +9,7 @@ public class DialogWindow : EditorWindow
     private List<Edge> edges;
     private object key = new object();
 
-    int threadCounter = 0;
+    private int threadCounter = 0;
     int timer = 0;
     public List<Node> connectedNodes = new List<Node>();
 
@@ -20,6 +20,8 @@ public class DialogWindow : EditorWindow
 
     private EdgePoint selectedInPoint;
     private EdgePoint selectedOutPoint;
+
+    TaskGiver taskGiver;
 
     private Vector2 offset;
     private Vector2 drag;
@@ -65,6 +67,8 @@ public class DialogWindow : EditorWindow
         if (GUI.Button(new Rect(0, 0, 100, 25), "End Script"))
         {
             isDone = true;
+            threadCounter = 0;
+            taskGiver = FindObjectOfType<TaskGiver>();
             if (isDone == true)
             {
                 CreateThreads();
@@ -116,12 +120,12 @@ public class DialogWindow : EditorWindow
                 if (connectedNodes[j].isDialog)
                 {
                     Debug.Log("Thread " + Thread.CurrentThread.Name + ":" + connectedNodes[j].diaMessage);
-                    TaskGiver.loadedNodes.Add(connectedNodes[j]);
+                    taskGiver.loadedNodes.Add(connectedNodes[j]);
                 }
                 else if (connectedNodes[j].isQuest)
                 {
                     Debug.Log("Thread " + Thread.CurrentThread.Name + " is quest node. \n Task name: " + connectedNodes[j].taskMessage + "\n Point is: " + connectedNodes[j].toggleBool + "\n Points is: " + connectedNodes[j].pointMessage);
-
+                    taskGiver.loadedNodes.Add(connectedNodes[j]);
                 }
             }
             Thread.Sleep(timer);
