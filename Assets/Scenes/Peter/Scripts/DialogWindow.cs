@@ -2,7 +2,8 @@
 using UnityEditor;
 using System.Collections.Generic;
 using System.Threading;
-
+[HideInInspector]
+[System.Serializable]
 public class DialogWindow : EditorWindow
 {
     private List<Node> nodes;
@@ -20,8 +21,6 @@ public class DialogWindow : EditorWindow
 
     private EdgePoint selectedInPoint;
     private EdgePoint selectedOutPoint;
-
-    TaskGiver taskGiver;
 
     private Vector2 offset;
     private Vector2 drag;
@@ -58,30 +57,62 @@ public class DialogWindow : EditorWindow
 
     private void OnGUI()
     {
-        DrawGrid(20, 0.2f, Color.gray);
-        DrawGrid(100, 0.4f, Color.gray);
-
-        DrawNodes();
-        DrawEdges();
-
-        if (GUI.Button(new Rect(0, 0, 100, 25), "End Script"))
+        if (Application.isEditor)
         {
-            isDone = true;
-            threadCounter = 0;
-            taskGiver = FindObjectOfType<TaskGiver>();
-            if (isDone == true)
+            DrawGrid(20, 0.2f, Color.gray);
+            DrawGrid(100, 0.4f, Color.gray);
+
+            DrawNodes();
+            DrawEdges();
+
+            if (GUI.Button(new Rect(0, 0, 100, 25), "End Script"))
             {
-                CreateThreads();
-                isDone = false;
+                isDone = true;
+                threadCounter = 0;
+                if (isDone == true)
+                {
+                    CreateThreads();
+                    isDone = false;
+                }
             }
+
+            DrawEdgeLine(Event.current);
+
+            ProcessNodeEvents(Event.current);
+            ProcessEvents(Event.current);
+
+            if (GUI.changed) Repaint();
         }
+    }
 
-        DrawEdgeLine(Event.current);
+    private void Update()
+    {
+        if (!Application.isEditor)
+        {
+            DrawGrid(20, 0.2f, Color.gray);
+            DrawGrid(100, 0.4f, Color.gray);
 
-        ProcessNodeEvents(Event.current);
-        ProcessEvents(Event.current);
+            DrawNodes();
+            DrawEdges();
 
-        if (GUI.changed) Repaint();
+            if (GUI.Button(new Rect(0, 0, 100, 25), "End Script"))
+            {
+                isDone = true;
+                threadCounter = 0;
+                if (isDone == true)
+                {
+                    CreateThreads();
+                    isDone = false;
+                }
+            }
+
+            DrawEdgeLine(Event.current);
+
+            ProcessNodeEvents(Event.current);
+            ProcessEvents(Event.current);
+
+            if (GUI.changed) Repaint();
+        }
     }
 
     private void CreateThreads()
@@ -120,12 +151,12 @@ public class DialogWindow : EditorWindow
                 if (connectedNodes[j].isDialog)
                 {
                     Debug.Log("Thread " + Thread.CurrentThread.Name + ":" + connectedNodes[j].diaMessage);
-                    taskGiver.loadedNodes.Add(connectedNodes[j]);
+                    TaskGiver.loadedNodes.Add(connectedNodes[j]);
                 }
                 else if (connectedNodes[j].isQuest)
                 {
                     Debug.Log("Thread " + Thread.CurrentThread.Name + " is quest node. \n Task name: " + connectedNodes[j].taskMessage + "\n Point is: " + connectedNodes[j].toggleBool + "\n Points is: " + connectedNodes[j].pointMessage);
-                    taskGiver.loadedNodes.Add(connectedNodes[j]);
+                    TaskGiver.loadedNodes.Add(connectedNodes[j]);
                 }
             }
             Thread.Sleep(timer);

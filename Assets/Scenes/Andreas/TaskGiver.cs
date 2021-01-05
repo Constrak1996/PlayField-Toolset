@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class TaskGiver : MonoBehaviour
 {
-    public List<Node> loadedNodes = new List<Node>();
+    public static List<Node> loadedNodes = new List<Node>();
     private List<string> nodeDialog = new List<string>();
     private List<string> nodeTaskName = new List<string>();
     private List<string> nodePoints = new List<string>();
@@ -45,6 +45,32 @@ public class TaskGiver : MonoBehaviour
         taskController = FindObjectOfType<TaskController>();
         EventController.OnTaskCompleted += Completed;
     }
+
+    private void Update()
+    {
+        foreach (Node node in loadedNodes)
+        {
+            if (node.isDialog)
+            {
+                nodeDialog.Add(node.diaMessage);
+            }
+            else if (node.isQuest)
+            {
+                nodeTaskName.Add(node.taskMessage);
+                nodePoints.Add(node.pointMessage);
+                GiveTask(node.taskMessage);
+            }
+        }
+        foreach (string point in nodePoints)
+        {
+            int pointHolder = Int32.Parse(point);
+            convertedPoints.Add(pointHolder);
+        }
+        Debug.Log("this is dialog message: " + nodeDialog[0]);
+        Debug.Log("this is Task Name: " + nodeTaskName[0]);
+        Debug.Log("this is points: " + convertedPoints[0]);
+    }
+
     public void GiveTaskSetup()
     {
 
@@ -54,7 +80,7 @@ public class TaskGiver : MonoBehaviour
     {
         taskType = "FindTask";
         string taskName = name;
-        string trigger = GameObject.Find("obj2label").GetComponent<Text>().text.ToString();
+        //string trigger = GameObject.Find("obj2label").GetComponent<Text>().text.ToString();
         AddTriggerName(name);
         task = taskController.AssaignTask(taskType, taskName);
         
