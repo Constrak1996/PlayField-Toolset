@@ -2029,8 +2029,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7754087174718054978}
-  - component: {fileID: 4124501268371124741}
   - component: {fileID: 5620674391488388738}
+  - component: {fileID: 4124501268371124741}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -2059,6 +2059,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5620674391488388738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6978289823891798264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41dd21abdb8bd3f48bd9ec9f5bfb375e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  character: {fileID: 0}
+  destinationCheckpoints: []
 --- !u!195 &4124501268371124741
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2081,19 +2095,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5620674391488388738
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6978289823891798264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41dd21abdb8bd3f48bd9ec9f5bfb375e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  destinationCheckpoints: []
 --- !u!1 &7095661692482104540
 GameObject:
   m_ObjectHideFlags: 0

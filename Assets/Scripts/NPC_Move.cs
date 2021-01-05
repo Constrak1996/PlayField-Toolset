@@ -8,12 +8,20 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class NPC_Move : MonoBehaviour
 {
     private int i;
-    public ThirdPersonCharacter character;
+    private ThirdPersonCharacter character;
     NavMeshAgent agent;
+    private bool done = false;
 
-    [SerializeField]
-    List<Transform> destinationCheckpoints;
+    
 
+    [SerializeField] Transform checkpoint_1;
+    [SerializeField] int waitTime1;
+    [SerializeField] Transform checkpoint_2;
+    [SerializeField] int waitTime2;
+    [SerializeField] bool loop;
+
+    //Checkpoint stuff
+    [SerializeField] List<Transform> destinationCheckpoints;
 
     private void Start()
     {
@@ -40,7 +48,15 @@ public class NPC_Move : MonoBehaviour
                 agent.Move(Vector3.zero); 
             }
 
-            SetDestination();
+            if (done == false)
+            {
+                SetDestination();
+            }
+            else if (done == true)
+            {
+                Debug.Log("Done");
+            }
+            
         }
 
         
@@ -50,11 +66,17 @@ public class NPC_Move : MonoBehaviour
     {
         if (other.gameObject.tag == "CheckPoint")
         {
-            //Destroy(other.gameObject);
             other.gameObject.SetActive(false);
             i++;
 
-            SetDestination();
+            if (done == false)
+            {
+                SetDestination();
+            }
+            else if (done == true)
+            {
+
+            }
         }
     }
 
@@ -63,11 +85,25 @@ public class NPC_Move : MonoBehaviour
     /// </summary>
     private void SetDestination()
     {
-        if (destinationCheckpoints != null)
+        
+        if(destinationCheckpoints.Count != 0)
         {
             Vector3 targetVector = destinationCheckpoints[i].transform.position;
-            //agent.Move(targetVector);
             agent.SetDestination(targetVector);
         }
+        else if(destinationCheckpoints.Count == 0)
+        {
+            done = true;
+        }
+    }
+
+    private void LoopingCheckpoint()
+    {
+
+    }
+
+    private void WaitCheckpoint()
+    {
+
     }
 }

@@ -13,7 +13,7 @@ public class ObjectSpawner : EditorWindow
 {
     string objectBaseName = "";
     int objectID = 1;
-    GameObject objectToSpawn, grid, gridParent;
+    GameObject objectToSpawn, grid, gridParent, checkpoint;
     static GameObject gridDestroyer;
     float objectScale;
     int gridSize;
@@ -77,6 +77,14 @@ public class ObjectSpawner : EditorWindow
         }
 
         GUILayout.Space(20);
+
+        GUILayout.Label("Create a checkpoint for your NPC to walk around)", EditorStyles.boldLabel);
+        if (GUILayout.Button("Create Checkpoint"))
+        {
+            CreateCheckPoint();
+        }
+
+        GUILayout.Space(20);
         GUILayout.Label("Character Animation Selector", EditorStyles.boldLabel);
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Character"));
@@ -133,6 +141,23 @@ public class ObjectSpawner : EditorWindow
         }
 
         GameObject newObject = Instantiate(objectToSpawn, new Vector3(0,0.6f,0), Quaternion.identity);
+    }
+
+    private void CreateCheckPoint()
+    {
+        //Checkpoint prefab
+        checkpoint = Resources.Load<GameObject>("Object Spawner/NPC_CheckPoint");
+
+        if (checkpoint == null)
+        {
+            Debug.LogError("Error: Checkpoint could not be spawned.");
+        }
+        if (objectBaseName == null)
+        {
+            Debug.LogError("Error: Please enter a base name for the object");
+        }
+
+        GameObject newObject = Instantiate(checkpoint, new Vector3(0, 0.6f, 0), Quaternion.identity);
     }
 }
 #endif
