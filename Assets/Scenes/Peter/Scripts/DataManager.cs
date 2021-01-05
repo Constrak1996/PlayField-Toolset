@@ -11,6 +11,6 @@ public class DataManager : Editor
         DrawDefaultInspector();
         DataManager dataManager = (DataManager)target;
 
-        dataManager.lol = EditorGUILayout.IntField("lol", dataManager.lol);
+        //dataManager.lol = EditorGUILayout.IntField("lol", dataManager.lol);
     }
 }
