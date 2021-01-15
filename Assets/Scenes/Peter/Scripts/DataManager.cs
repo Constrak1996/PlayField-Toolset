@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEditor.SceneManagement;
 
-[CustomEditor(typeof(DialogWindow))]
+[CustomEditor(typeof(QuestWindow))]
 public class DataManager : Editor
 {
 

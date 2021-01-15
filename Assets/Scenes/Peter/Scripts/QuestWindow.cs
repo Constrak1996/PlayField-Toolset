@@ -2,36 +2,38 @@
 using UnityEditor;
 using System.Collections.Generic;
 using System.Threading;
+using UnityEngine.SceneManagement;
+
 [HideInInspector]
 [System.Serializable]
-public class DialogWindow : EditorWindow
+public class QuestWindow : EditorWindow
 {
-    private List<Node> nodes;
-    private List<Edge> edges;
-    private object key = new object();
+    [SerializeField] private List<Node> nodes;
+    [SerializeField] private List<Edge> edges;
+    [SerializeField] private object key = new object();
 
-    private int threadCounter = 0;
-    int timer = 0;
-    public List<Node> connectedNodes = new List<Node>();
+    [SerializeField] private int threadCounter = 0;
+    [SerializeField] int timer = 0;
+    [SerializeField] public List<Node> connectedNodes = new List<Node>();
 
-    private GUIStyle nodeStyle;
-    private GUIStyle selectedNodeStyle;
-    private GUIStyle inPointStyle;
-    private GUIStyle outPointStyle;
+    [SerializeField] private GUIStyle nodeStyle;
+    [SerializeField] private GUIStyle selectedNodeStyle;
+    [SerializeField] private GUIStyle inPointStyle;
+    [SerializeField] private GUIStyle outPointStyle;
 
-    private EdgePoint selectedInPoint;
-    private EdgePoint selectedOutPoint;
+    [SerializeField] private EdgePoint selectedInPoint;
+    [SerializeField] private EdgePoint selectedOutPoint;
 
-    private Vector2 offset;
-    private Vector2 drag;
+    [SerializeField] private Vector2 offset;
+    [SerializeField] private Vector2 drag;
 
     public bool isDone = false;
 
-    [MenuItem("PlayField/Dialog Window")]
+    [MenuItem("PlayField/QuestWindow")]
     private static void OpenWindow()
     {
-        DialogWindow window = GetWindow<DialogWindow>();
-        window.titleContent = new GUIContent("Dialog Window");
+        QuestWindow window = GetWindow<QuestWindow>();
+        window.titleContent = new GUIContent("QuestWindow");
     }
 
     private void OnEnable()
@@ -85,49 +87,19 @@ public class DialogWindow : EditorWindow
         }
     }
 
-    private void Update()
-    {
-        if (!Application.isEditor)
-        {
-            DrawGrid(20, 0.2f, Color.gray);
-            DrawGrid(100, 0.4f, Color.gray);
-
-            DrawNodes();
-            DrawEdges();
-
-            if (GUI.Button(new Rect(0, 0, 100, 25), "End Script"))
-            {
-                isDone = true;
-                threadCounter = 0;
-                if (isDone == true)
-                {
-                    CreateThreads();
-                    isDone = false;
-                }
-            }
-
-            DrawEdgeLine(Event.current);
-
-            ProcessNodeEvents(Event.current);
-            ProcessEvents(Event.current);
-
-            if (GUI.changed) Repaint();
-        }
-    }
-
     private void CreateThreads()
     {
         Thread[] threads = new Thread[connectedNodes.Count];
         for (int i = 0; i < connectedNodes.Count; i++)
         {
-            threads[i] = new Thread(() => TestRunOfAllNodes());
+            threads[i] = new Thread(() => RunAllNodes());
             threads[i].Name = i.ToString();
 
             threads[i].Start();
         }
     }
 
-    private void TestRunOfAllNodes()
+    private void RunAllNodes()
     {
         int j = 0;
 
@@ -141,7 +113,7 @@ public class DialogWindow : EditorWindow
                 {
                     foreach (char character in connectedNodes[i].diaMessage)
                     {
-                        timer += 200;
+                        timer += 150;
                     }
                 }
             }
@@ -317,7 +289,7 @@ public class DialogWindow : EditorWindow
             nodes = new List<Node>();
         }
 
-        nodes.Add(new Node(mousePosition, 200, 150, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, NodeType.Dialog, RemoveConnectedNode));
+        nodes.Add(new Node(mousePosition, 200, 75, nodeStyle, selectedNodeStyle, inPointStyle, outPointStyle, OnClickInPoint, OnClickOutPoint, OnClickRemoveNode, NodeType.Dialog, RemoveConnectedNode));
     }
 
     private void OnClickAddQuest(Vector2 mousePosition)
@@ -338,7 +310,6 @@ public class DialogWindow : EditorWindow
         {
             if (selectedOutPoint.node != selectedInPoint.node && inPoint.attached == 0 && selectedOutPoint.attached == 0)
             {
-                inPoint.attached = 1;
                 AddConnectedNode(selectedOutPoint.node);
                 AddConnectedNode(selectedInPoint.node);
                 CreateEdge();
@@ -359,7 +330,6 @@ public class DialogWindow : EditorWindow
         {
             if (selectedOutPoint.node != selectedInPoint.node && outPoint.attached == 0 && selectedInPoint.attached == 0)
             {
-                outPoint.attached = 1;
                 AddConnectedNode(selectedOutPoint.node);
                 AddConnectedNode(selectedInPoint.node);
                 CreateEdge();
