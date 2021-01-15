@@ -78,7 +78,7 @@ public class ObjectSpawner : EditorWindow
 
         GUILayout.Space(20);
 
-        GUILayout.Label("Create a checkpoint for your NPC to walk around)", EditorStyles.boldLabel);
+        GUILayout.Label("Create a checkpoint for your NPC to walk around", EditorStyles.boldLabel);
         if (GUILayout.Button("Create Checkpoint"))
         {
             CreateCheckPoint();
