@@ -8,67 +8,50 @@ using System.Runtime.CompilerServices;
 using UnityEditor.PackageManager.UI;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
+using UnityEditor.IMGUI.Controls;
 
 public class CustomWindowInspector : EditorWindow
 {
-    string aktiveGameObject,tags, go;
+    enum toggleGroup
+    {
+        RidgetBody, Light, material, Transform, Name, Color, Tag
+    }
+    string aktiveGameObject,tags;
     private Vector3 myStringPos;
     private Vector3 myStringSc;
     private Vector3 myVectorRotation;
-    private SerializedObject soTarget;
-    bool showName,ShowTransform;
-    
+    int switchNumber;
+    bool showToggle,ridgetBody,light,material,toggleTransform, toggleName,toggleColor,toggleTag;
     Color color;
     
-    
-    
-
     [MenuItem("PlayField/CustomInspector")]
     public static void init()
     {
         EditorWindow window = GetWindow<CustomWindowInspector>("CustomInspector");
-        
     }
 
-    private void OnEnable()
-    {
-        
-    }
     void OnGUI()
     {
         EditorGUIUtility.wideMode = true;
-        
         EditorGUILayout.BeginHorizontal();
-        showName = EditorGUILayout.BeginFoldoutHeaderGroup(showName, "Name");
-        EditorGUILayout.EndFoldoutHeaderGroup();
-        
-        ShowTransform = EditorGUILayout.BeginFoldoutHeaderGroup(ShowTransform, "Transform");
-        EditorGUILayout.EndFoldoutHeaderGroup();
+        showToggle = GUILayout.Toggle(showToggle, "Toggle");
         EditorGUILayout.EndHorizontal();
-        if (showName)
+        if (toggleTag == true)
         {
-            tags = EditorGUILayout.TagField("Tag",tags);
+            tags = EditorGUILayout.TagField("Tag", tags);
+        }
+        if (toggleName == true)
+        {
             aktiveGameObject = EditorGUILayout.TextField("Name", Selection.activeObject.name.Replace("(UnityEngine.GameObject)", ""));
-            
-            foreach (GameObject itemName in Selection.gameObjects)
-            {
-                if (itemName != null)
-                {
-                    itemName.name = aktiveGameObject;
-                    itemName.tag = tags;
-                }
-                
-            }
-
         }
         EditorGUILayout.Space();
-        if (ShowTransform)
+        if (toggleTransform == true)
         {
             EditorGUILayout.LabelField("Transform");
             myStringPos = EditorGUILayout.Vector3Field("Position", Selection.activeTransform.localPosition);
             myVectorRotation = EditorGUILayout.Vector3Field("Rotation", Selection.activeTransform.eulerAngles);
             myStringSc = EditorGUILayout.Vector3Field("Scale", Selection.activeTransform.localScale);
-
             foreach (GameObject item in Selection.gameObjects)
             {
                 if (item != null)
@@ -77,22 +60,58 @@ public class CustomWindowInspector : EditorWindow
                     item.transform.localScale = myStringSc;
                     item.transform.eulerAngles = myVectorRotation;
                 }
-                
             }
-
+        }
+        if (toggleColor == true)
+        {
             color = EditorGUILayout.ColorField("Color", color);
             if (GUILayout.Button("Color"))
             {
                 Color();
             }
         }
-        
-        if (GUILayout.Button("Add Component"))
+        EditorGUILayout.Space();
+        if (showToggle)
+        {
+            ridgetBody = GUILayout.Toggle(ridgetBody, "RidgetBody");
+            light = GUILayout.Toggle(light, "Light");
+            material = GUILayout.Toggle(material, "Material");
+            toggleColor = GUILayout.Toggle(toggleColor, "Color");
+            toggleName = GUILayout.Toggle(toggleName, "Name");
+            toggleTag = GUILayout.Toggle(toggleTag, "Tag");
+            toggleTransform = GUILayout.Toggle(toggleTransform, "Transform");
+
+            switch (switchNumber)
+            {
+                case 1:
+                    ridgetBody = true;
+                    break;
+                case 2:
+                    light = true;
+                    break;
+                case 3:
+                    material = true;
+                    break;
+                case 4:
+                    toggleColor = true;
+                    break;
+                case 5:
+                    toggleName = true;
+                    break;
+                case 6:
+                    toggleTag = true;
+                    break;
+                case 7:
+                    toggleTransform = true;
+                    break;
+            }
+        }
+        /*if (GUILayout.Button("Add Component"))
         {
             AddComponent();
-        }
+        }*/
     }
-    
+
     private void Color()
     {
         foreach (GameObject obj in Selection.gameObjects)
@@ -104,14 +123,9 @@ public class CustomWindowInspector : EditorWindow
             }
         }
     }
-
     private void AddComponent()
     {
-        Debug.Log("OH no Not implemented yet!");
-    }
-    private void Update()
-    {
         
+        Debug.Log($"OH no Not implemented yet! { name }");
     }
-
 }
